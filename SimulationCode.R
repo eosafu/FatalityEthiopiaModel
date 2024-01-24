@@ -396,9 +396,9 @@ stack1 = inla.stack(tag='est1',
   
  summary(sim21)
  
- sim1$summary.fixed
- sim20$summary.fixed
- sim21$summary.fixed
+ sim1$summary.fixed  # Joint approach
+ sim20$summary.fixed # Sequential-binary component
+ sim21$summary.fixed # Sequential-count component
  
 ################
 # PLOT
