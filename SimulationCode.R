@@ -1,3 +1,7 @@
+##############################################################################
+#### This code shows an example of estimating a zero-inflated 
+#### count model with R-INLA using joint and sequential estimation approaches
+##############################################################################
 library(INLA)
 library(fields)
 library(ggplot2)
@@ -10,8 +14,12 @@ inla.seed = sample.int(n=1E7, size=1)
 options(width=70, digits=3)
 
 ##############################################
-#### Simulate Binary and count spatial fields
+####(1) Simulate Binary and count spatial fields
 ##############################################
+
+  ##########################
+  ######## Binary component
+  ##########################
   # Marginal standard deviation
   sigma.u_0 = 0.2
   # - range
@@ -80,7 +88,9 @@ options(width=70, digits=3)
     )
     
     dff <- df[which(ind == 1), ]
-
+##############################################
+#### Import Ethiopia shp file for plotting
+##############################################
 subshp <- st_read(dsn = "/Users/egbonoa/Documents/Documents01_09_2023_From_USPLaptop/R/Rwork/CrimeEthiopia/eth_adm_csa_bofedb_2021_shp/eth_admbnda_adm1_csa_bofedb_2021.shp", stringsAsFactors = F)
 
 shp_df <- st_geometry(subshp, region = "ADM1_EN")
@@ -174,14 +184,14 @@ set.seed(43567)
 # - calculate linear predictors
 #############################
 #############################
-#  Simulation scheme 1
+#  Simulation scheme 1 (where the same spatial effect generates both binary and count components)
   
   u = ux1
   lin.pred0  = beta0[1] + beta0[2]*x  +beta0[3]*w  +  0.4*u 
   lin.pred1 =  beta1[1] + beta1[2]*x+  beta1[3]*w  + u 
 #############################
 #############################
-  #  Simulation scheme 2 (Uncomment to run simulation scheme 2)
+  #  Simulation scheme 2 (where the different spatial effects generate the binary and count components)(Uncomment to run simulation scheme 2)
   
 
  # lin.pred0  = beta0[1] + beta0[2]*x  +beta0[3]*w  +   ux0
@@ -203,7 +213,9 @@ set.seed(43567)
   ##################
   #Estimation begins
   ##################
-
+  #############################
+  # (2) Estimation using a joint model (Asmarian, 2019)
+  ############################# 
   
   mesh = inla.mesh.2d(loc = loc.data, max.edge=c(2, 2))
   A = inla.spde.make.A(mesh=mesh, loc=loc.data)
@@ -241,9 +253,7 @@ stack1 = inla.stack(tag='est1',
   join.stack <- inla.stack(
     stack0, stack1)
   
-  #############################
-  # Estimation using joint model (Asmarian, 2019)
-  ############################# 
+
   formulae <- Y ~ -1 +intercept0+intercept1+x0+x1+w0+w1+
     f(i, copy = "j",fixed=F)+
     f(j, model = spde)
@@ -262,8 +272,9 @@ stack1 = inla.stack(tag='est1',
   
   summary(sim1)
 
+
   ######################################
-  # Estimation using sequential framework
+  #(3) Estimation using sequential framework
   ######################################
   
 
