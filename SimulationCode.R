@@ -96,7 +96,7 @@ options(width=70, digits=3)
 #shp_df <- st_geometry(subshp, region = "ADM1_EN")
     
 #subshp =  st_coordinates(shp_df) %>%as.data.frame()
-load("subshp.Rdata")
+load("subshp.Rdata") # Can be downloaded from this repository.
   #####
   p0 <- ggplot(dff, aes(x=x, y=y)) +
     geom_tile(aes(fill = mean_s)) +
