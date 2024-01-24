@@ -1,5 +1,5 @@
 ##############################################################################
-#### This code shows an example of estimating a zero-inflated spatio-temporal (on continuous scale)
+#### This code shows an example of estimating a zero-inflated spatio-temporal (on a continuous scale)
 #### count model with R-INLA using joint and sequential estimation approaches
 ##############################################################################
 library(INLA)
@@ -91,12 +91,12 @@ options(width=70, digits=3)
 ##############################################
 #### Import Ethiopia shp file for plotting
 ##############################################
-subshp <- st_read(dsn = "/Users/egbonoa/Documents/Documents01_09_2023_From_USPLaptop/R/Rwork/CrimeEthiopia/eth_adm_csa_bofedb_2021_shp/eth_admbnda_adm1_csa_bofedb_2021.shp", stringsAsFactors = F)
+#subshp <- st_read(dsn = "eth_adm_csa_bofedb_2021_shp/eth_admbnda_adm1_csa_bofedb_2021.shp", stringsAsFactors = F)
 
-shp_df <- st_geometry(subshp, region = "ADM1_EN")
+#shp_df <- st_geometry(subshp, region = "ADM1_EN")
     
-subshp =  st_coordinates(shp_df) %>%as.data.frame()
-
+#subshp =  st_coordinates(shp_df) %>%as.data.frame()
+load("subshp.Rdata")
   #####
   p0 <- ggplot(dff, aes(x=x, y=y)) +
     geom_tile(aes(fill = mean_s)) +
@@ -444,7 +444,7 @@ df <-  expand.grid(x = projgrid$x, y = projgrid$y)
   
   dff <- df[which(ind == 1), ]
 
-subshp =  st_coordinates(shp_df) %>%as.data.frame()
+#subshp =  st_coordinates(shp_df) %>%as.data.frame()
 #####
 p_fitJoint <- ggplot(dff, aes(x=x, y=y)) +
   geom_tile(aes(fill = (mean_s1) )) +
