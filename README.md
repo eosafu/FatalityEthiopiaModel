@@ -1,1 +1,3 @@
-This work presents a
+# Violent event-related fatality pattern in Ethiopia: a Bayesian spatio-temporal perspective
+
+In this work, we performed a spatio-temporal model to map the fatality counts due to violent events in Ethiopia. Due to the excessive number of zeros in the acquired data, we proposed a sequential modeling framework that leverages the R-INLA's computational power. We compared our approach with a joint modeling approach with R-INLA through simulation studies. While both approaches gave similar results, the proposed sequential approach is more computationally efficient as it divides the computational burden into smaller chunks. 
