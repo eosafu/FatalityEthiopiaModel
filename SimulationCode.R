@@ -1,5 +1,5 @@
 ##############################################################################
-#### This code shows an example of estimating a zero-inflated 
+#### This code shows an example of estimating a zero-inflated spatio-temporal (on continuous scale)
 #### count model with R-INLA using joint and sequential estimation approaches
 ##############################################################################
 library(INLA)
