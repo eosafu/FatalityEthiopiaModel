@@ -26,10 +26,12 @@ options(width=70, digits=3)
   range_0 = 1
 
   # Import Ethiopia boundary coordinates
-  path <- read_sf(dsn="Ethiopia.kml")
-  path = st_coordinates(path)
-  path = path[,c(1,2)]
-  
+  #path <- read_sf(dsn="Ethiopia.kml")
+  #path = st_coordinates(path)
+  #path = path[,c(1,2)]
+  # OR
+  load("path.Rdata") # Available on this repository.
+
   # > c(min(DDat$LONGITUDE),min(DDat$LATITUDE),max(DDat$LONGITUDE),max(DDat$LONGITUDE),
   # +                             min(DDat$LONGITUDE), max(DDat$LONGITUDE), max(DDat$LONGITUDE), min(DDat$LATITUDE))
   # [1] 33.086  3.450 45.529 45.529 33.086 45.529 45.529  3.450
@@ -96,6 +98,7 @@ options(width=70, digits=3)
 #shp_df <- st_geometry(subshp, region = "ADM1_EN")
     
 #subshp =  st_coordinates(shp_df) %>%as.data.frame()
+# OR
 load("subshp.Rdata") # Can be downloaded from this repository.
   #####
   p0 <- ggplot(dff, aes(x=x, y=y)) +
