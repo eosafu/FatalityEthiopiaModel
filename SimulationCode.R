@@ -359,8 +359,23 @@ stack1 = inla.stack(tag='est1',
                   control.fixed = list(expand.factor.strategy = 'inla'),
                   control.compute = list(config = TRUE,dic = TRUE,waic=TRUE,cpo=TRUE)
                   ,verbose = TRUE) 
-    
-    return(sim21$waic$waic)
+
+  m2 <- inla.posterior.sample(100, sim21)
+  predprob3= lppd = NULL
+  xi=1/sim21$summary.hyperpar[1,1]
+  for (i in 1:100) {
+    Apred = exp(m2[[i]]$latent[grep("APredictor",rownames(m2[[i]]$latent )),])
+    rex=dnbinom(rep(1,length(Apred)),mu=Apred,size = xi)
+    lppd=cbind( lppd, rex)
+  }
+  lppd1 = rowMeans(lppd) %>% log
+  lppd1 = sum( lppd1[(stack1$data$data!=0 & !is.na(stack1$data$data))])
+  lapp2 = log(lppd)
+  lapp2 = apply(lapp2,1,function(x) var(x))
+  lapp2 = sum(lapp2)
+  Waic = -2*(lppd1 - lapp2)
+                
+    return(Waic)
   }
   res = nlminb(start = 0.01, objective = GD, lower = c(0), 
                upper = c(1))
