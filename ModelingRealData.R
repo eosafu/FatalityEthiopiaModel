@@ -274,15 +274,31 @@ GD = function(k) {
                         idd=DDat$iddd)),
     tag = 'stdata1')
   
-  resincnozero <- inla(formulae,  
+  resincno <- inla(formulae,  
                        family = "nbinomial",
-                       data = inla.stack.data(sdat0), 
+                       data = inla.stack.data(sdat1), 
                        control.predictor = list(compute = TRUE,
-                                                A = inla.stack.A(sdat0)), 
+                                                A = inla.stack.A(sdat1)), 
                        control.fixed = list(expand.factor.strategy = 'inla'),control.compute = list(config = TRUE,dic = TRUE,waic=TRUE,cpo=TRUE)
                        ,verbose = TRUE)
 
-  return(resincnozero$waic$waic)
+ m2 <- inla.posterior.sample(100, resincno)
+  predprob3=NULL
+  no=20   # number of deaths negative binomial parameter
+  xi=1/resincno$summary.hyperpar[1,1]
+  lppd = NULL
+  for (i in 1:100) {
+    Apred = exp(m2[[i]]$latent[grep("APredictor",rownames(m2[[i]]$latent )),])
+    rex=dnbinom(rep(1,length(Apred)),mu=Apred,size = xi)
+    lppd=cbind( lppd, rex)
+  }
+  lppd1 = rowMeans(lppd) %>% log
+  lppd1 = sum( lppd1[(sdat1$data$data!=0 & !is.na(sdat1$data$data))])
+  lapp2 = log(lppd)
+  lapp2 = apply(lapp2,1,function(x) var(x))
+  lapp2 = sum(lapp2)
+  Waic = -2*(lppd1 - lapp2)
+  return(Waic)
 }
 res = nlminb(start = 0.01, objective = GD, lower = c(0), 
              upper = c(1))
